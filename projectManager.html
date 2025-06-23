@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <title>仿真项目分类管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+      max-width: 720px;
+      margin: auto;
+    }
+    h1 {
+      color: #444;
+    }
+    .category {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #4ea1ff;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .category h2 {
+      margin: 0 0 0.5rem 0;
+    }
+    .category button {
+      margin-top: 0.5rem;
+      background: #ff6666;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .category button:hover {
+      background: #ff3a3a;
+    }
+    .add-btn {
+      background: #4ea1ff;
+      color: white;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+    }
+    .add-btn:hover {
+      background: #3690f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>仿真项目分类管理</h1>
+  <button class="add-btn" onclick="addCategory()">➕ 添加新分类</button>
+  <div id="categories"></div>
+
+  <script>
+  // 修改：自定义你的删除密码
+  const DELETE_PASSWORD = "zy1234";
+
+  let categories = JSON.parse(localStorage.getItem("simCategories")) || [];
+
+  function renderCategories() {
+    const container = document.getElementById("categories");
+    container.innerHTML = "";
+    categories.forEach((cat, index) => {
+      const div = document.createElement("div");
+      div.className = "category";
+      div.innerHTML = `
+        <h2>${cat.icon || "📁"} ${cat.name}</h2>
+        <p>${cat.desc || "无简介"}</p>
+        <button onclick="deleteCategory(${index})">❌ 删除</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addCategory() {
+    const name = prompt("请输入分类名称（如：仓储物流仿真）");
+    if (!name) return;
+    const desc = prompt("请输入简要描述");
+    const icon = prompt("请输入图标（如 🚚）");
+    categories.push({ name, desc, icon });
+    localStorage.setItem("simCategories", JSON.stringify(categories));
+    renderCategories();
+  }
+
+  function deleteCategory(index) {
+    const pwd = prompt("请输入删除密码：");
+    if (pwd !== DELETE_PASSWORD) {
+      alert("密码错误，无法删除！");
+      return;
+    }
+    if (confirm("确认删除该分类吗？此操作不可撤销")) {
+      categories.splice(index, 1);
+      localStorage.setItem("simCategories", JSON.stringify(categories));
+      renderCategories();
+    }
+  }
+
+  renderCategories();
+</script>
+</body>
+</html>
