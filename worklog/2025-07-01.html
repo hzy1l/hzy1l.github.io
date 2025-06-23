@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>2025-07-01｜仓库调度仿真优化</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    pre {
+      background: #f3f3f3;
+      padding: 1em;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+    code {
+      font-family: monospace;
+      color: #004380;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    .tag {
+      background-color: #ddd;
+      color: #333;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🗓️ 2025-07-01｜仓库调度仿真优化</h1>
+  <p>标签：
+    <span class="tag">Plant Simulation</span>
+    <span class="tag">SimTalk</span>
+    <span class="tag">出库逻辑</span>
+  </p>
+
+  <section>
+    <h2>🧭 工作概览</h2>
+    <p>今天主要对出库逻辑进行优化测试，关注多任务并发时的资源分配机制，尝试引入信号控制方案改进调度稳定性。</p>
+  </section>
+
+  <section>
+    <h2>❓ 问题描述</h2>
+    <ul>
+      <li>优先级设定不当，导致同一资源被反复请求</li>
+      <li>部分队列逻辑卡死，资源未释放</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 解决方案</h2>
+    <p>通过增加 `checkAvailable()` 函数配合 `createStopwatch()` 方法测量等待时间，筛查瓶颈源：</p>
+    <pre><code>// SimTalk 示例
+if Resource[].isFree and TaskQueue[].numWaiting > 0
+  do
+    Task := TaskQueue[].first;
+    Task.start;
+  end;
+</code></pre>
+  </section>
+
+  <section>
+    <h2>🛠️ 后续计划</h2>
+    <ol>
+      <li>重构优先级映射逻辑（使用映射表关联任务级别）</li>
+      <li>测试信号响应机制在高负载下的表现</li>
+    </ol>
+  </section>
+
+  <p><a href="../index.html">← 返回首页</a></p>
+</body>
+</html>
