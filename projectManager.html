@@ -2,59 +2,279 @@
 <html lang="zh-cn">
 <head>
   <meta charset="UTF-8" />
-  <title>仿真项目分类管理</title>
+  <title>项目管理 - ZY.Logic Lab</title>
+  <link rel="stylesheet" href="assets/style.css">
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f4f4f4;
-      padding: 2rem;
-      max-width: 720px;
-      margin: auto;
+    .manager-container {
+      margin-top: 2rem;
     }
-    h1 {
-      color: #444;
-    }
+    
     .category {
-      background: #fff;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      background: #2a2a2a;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
       border-left: 6px solid #4ea1ff;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
+    
+    .category:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
     .category h2 {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .category button {
-      margin-top: 0.5rem;
-      background: #ff6666;
-      color: white;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      cursor: pointer;
+    
+    .category p {
+      color: #bbb;
+      margin-bottom: 1.5rem;
     }
-    .category button:hover {
-      background: #ff3a3a;
+    
+    .category-actions {
+      display: flex;
+      gap: 1rem;
     }
-    .add-btn {
+    
+    .btn {
       background: #4ea1ff;
       color: white;
-      padding: 0.6rem 1rem;
-      border: none;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+      border: none;
       cursor: pointer;
+    }
+    
+    .btn:hover {
+      background: #60b2ff;
+    }
+    
+    .btn-danger {
+      background: #ff5252;
+    }
+    
+    .btn-danger:hover {
+      background: #ff3838;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #ccc;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .nav-bar {
+      display: flex;
+      background: #2a2a2a;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .nav-bar a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .nav-bar a:hover, .nav-bar a.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .nav-bar a.active {
+      font-weight: bold;
+    }
+    
+    .add-category {
       margin-bottom: 2rem;
     }
-    .add-btn:hover {
-      background: #3690f0;
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+    }
+    
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: #333;
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: #eee;
+      font-family: inherit;
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: #2a2a2a;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-header h2 {
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .modal-close:hover {
+      color: #fff;
     }
   </style>
 </head>
 <body>
-  <h1>仿真项目分类管理</h1>
-  <button class="add-btn" onclick="addCategory()">➕ 添加新分类</button>
-  <div id="categories"></div>
+  <h1>项目管理</h1>
+  
+  <div class="nav-bar">
+    <a href="index.html">首页</a>
+    <a href="projects.html">项目库</a>
+    <a href="tutorials.html">教程</a>
+    <a href="knowledge.html">知识库</a>
+    <a href="worklog.html">工作日志</a>
+  </div>
+  
+  <div class="add-category">
+    <button class="btn" id="openAddModal">➕ 添加新项目分类</button>
+  </div>
+  
+  <div class="manager-container" id="categories"></div>
+  
+  <!-- 添加分类模态框 -->
+  <div class="modal" id="addCategoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>添加新项目分类</h2>
+        <button class="modal-close" id="closeAddModal">&times;</button>
+      </div>
+      <form id="addCategoryForm">
+        <div class="form-group">
+          <label for="categoryName">分类名称</label>
+          <input type="text" id="categoryName" placeholder="如：仓储物流仿真" required>
+        </div>
+        <div class="form-group">
+          <label for="categoryIcon">分类图标</label>
+          <input type="text" id="categoryIcon" placeholder="如：🚚 🤖 📊 🏭" value="📦">
+        </div>
+        <div class="form-group">
+          <label for="categoryDesc">分类描述</label>
+          <textarea id="categoryDesc" placeholder="请输入简要描述..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelAdd">取消</button>
+          <button type="submit" class="btn">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- 编辑分类模态框 -->
+  <div class="modal" id="editCategoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>编辑项目分类</h2>
+        <button class="modal-close" id="closeEditModal">&times;</button>
+      </div>
+      <form id="editCategoryForm">
+        <input type="hidden" id="editCategoryIndex">
+        <div class="form-group">
+          <label for="editCategoryName">分类名称</label>
+          <input type="text" id="editCategoryName" placeholder="如：仓储物流仿真" required>
+        </div>
+        <div class="form-group">
+          <label for="editCategoryIcon">分类图标</label>
+          <input type="text" id="editCategoryIcon" placeholder="如：🚚 🤖 📊 🏭">
+        </div>
+        <div class="form-group">
+          <label for="editCategoryDesc">分类描述</label>
+          <textarea id="editCategoryDesc" placeholder="请输入简要描述..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEdit">取消</button>
+          <button type="submit" class="btn">保存更改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- 删除确认模态框 -->
+  <div class="modal" id="deleteConfirmModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>确认删除</h2>
+        <button class="modal-close" id="closeDeleteModal">&times;</button>
+      </div>
+      <p>确定要删除这个项目分类吗？此操作不可撤销。</p>
+      <div class="form-group">
+        <label for="deletePassword">请输入删除密码</label>
+        <input type="password" id="deletePassword" placeholder="输入密码确认删除">
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDelete">取消</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">确认删除</button>
+      </div>
+      <input type="hidden" id="deleteCategoryIndex">
+    </div>
+  </div>
 
   <script>
   // 修改：自定义你的删除密码
@@ -62,45 +282,152 @@
 
   let categories = JSON.parse(localStorage.getItem("simCategories")) || [];
 
+  // 渲染分类列表
   function renderCategories() {
     const container = document.getElementById("categories");
     container.innerHTML = "";
+    
+    if (categories.length === 0) {
+      container.innerHTML = `<p style="text-align: center; color: #999; padding: 2rem;">暂无项目分类，请点击上方按钮添加</p>`;
+      return;
+    }
+    
     categories.forEach((cat, index) => {
       const div = document.createElement("div");
       div.className = "category";
       div.innerHTML = `
         <h2>${cat.icon || "📁"} ${cat.name}</h2>
         <p>${cat.desc || "无简介"}</p>
-        <button onclick="deleteCategory(${index})">❌ 删除</button>
+        <div class="category-actions">
+          <a href="simulations/${cat.name}/intro.html" class="btn">查看项目</a>
+          <button class="btn btn-secondary" onclick="editCategory(${index})">✏️ 编辑</button>
+          <button class="btn btn-danger" onclick="showDeleteModal(${index})">❌ 删除</button>
+        </div>
       `;
       container.appendChild(div);
     });
   }
 
-  function addCategory() {
-    const name = prompt("请输入分类名称（如：仓储物流仿真）");
+  // 添加分类
+  function addCategory(event) {
+    if (event) event.preventDefault();
+    
+    const name = document.getElementById("categoryName").value.trim();
     if (!name) return;
-    const desc = prompt("请输入简要描述");
-    const icon = prompt("请输入图标（如 🚚）");
+    
+    const desc = document.getElementById("categoryDesc").value.trim();
+    const icon = document.getElementById("categoryIcon").value.trim();
+    
     categories.push({ name, desc, icon });
     localStorage.setItem("simCategories", JSON.stringify(categories));
+    
+    // 关闭模态框并重新渲染
+    document.getElementById("addCategoryModal").style.display = "none";
+    document.getElementById("addCategoryForm").reset();
     renderCategories();
   }
 
-  function deleteCategory(index) {
-    const pwd = prompt("请输入删除密码：");
+  // 编辑分类
+  function editCategory(index) {
+    const category = categories[index];
+    
+    // 填充表单
+    document.getElementById("editCategoryIndex").value = index;
+    document.getElementById("editCategoryName").value = category.name || "";
+    document.getElementById("editCategoryIcon").value = category.icon || "";
+    document.getElementById("editCategoryDesc").value = category.desc || "";
+    
+    // 显示模态框
+    document.getElementById("editCategoryModal").style.display = "flex";
+  }
+  
+  // 保存编辑
+  function saveEditCategory(event) {
+    event.preventDefault();
+    
+    const index = parseInt(document.getElementById("editCategoryIndex").value);
+    const name = document.getElementById("editCategoryName").value.trim();
+    
+    if (!name) return;
+    
+    const desc = document.getElementById("editCategoryDesc").value.trim();
+    const icon = document.getElementById("editCategoryIcon").value.trim();
+    
+    categories[index] = { name, desc, icon };
+    localStorage.setItem("simCategories", JSON.stringify(categories));
+    
+    // 关闭模态框并重新渲染
+    document.getElementById("editCategoryModal").style.display = "none";
+    renderCategories();
+  }
+
+  // 显示删除确认模态框
+  function showDeleteModal(index) {
+    document.getElementById("deleteCategoryIndex").value = index;
+    document.getElementById("deletePassword").value = "";
+    document.getElementById("deleteConfirmModal").style.display = "flex";
+  }
+  
+  // 删除分类
+  function deleteCategory() {
+    const index = parseInt(document.getElementById("deleteCategoryIndex").value);
+    const pwd = document.getElementById("deletePassword").value;
+    
     if (pwd !== DELETE_PASSWORD) {
       alert("密码错误，无法删除！");
       return;
     }
-    if (confirm("确认删除该分类吗？此操作不可撤销")) {
-      categories.splice(index, 1);
-      localStorage.setItem("simCategories", JSON.stringify(categories));
-      renderCategories();
-    }
+    
+    categories.splice(index, 1);
+    localStorage.setItem("simCategories", JSON.stringify(categories));
+    
+    // 关闭模态框并重新渲染
+    document.getElementById("deleteConfirmModal").style.display = "none";
+    renderCategories();
   }
 
   renderCategories();
-</script>
+// 初始化页面
+  document.addEventListener('DOMContentLoaded', function() {
+    renderCategories();
+    
+    // 添加分类模态框
+    document.getElementById('openAddModal').addEventListener('click', function() {
+      document.getElementById('addCategoryModal').style.display = 'flex';
+    });
+    
+    document.getElementById('closeAddModal').addEventListener('click', function() {
+      document.getElementById('addCategoryModal').style.display = 'none';
+    });
+    
+    document.getElementById('cancelAdd').addEventListener('click', function() {
+      document.getElementById('addCategoryModal').style.display = 'none';
+    });
+    
+    document.getElementById('addCategoryForm').addEventListener('submit', addCategory);
+    
+    // 编辑分类模态框
+    document.getElementById('closeEditModal').addEventListener('click', function() {
+      document.getElementById('editCategoryModal').style.display = 'none';
+    });
+    
+    document.getElementById('cancelEdit').addEventListener('click', function() {
+      document.getElementById('editCategoryModal').style.display = 'none';
+    });
+    
+    document.getElementById('editCategoryForm').addEventListener('submit', saveEditCategory);
+    
+    // 删除确认模态框
+    document.getElementById('closeDeleteModal').addEventListener('click', function() {
+      document.getElementById('deleteConfirmModal').style.display = 'none';
+    });
+    
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+      document.getElementById('deleteConfirmModal').style.display = 'none';
+    });
+    
+    document.getElementById('confirmDelete').addEventListener('click', deleteCategory);
+  });
+  </script>
 </body>
 </html>

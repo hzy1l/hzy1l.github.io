@@ -1,31 +1,317 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
   <meta charset="UTF-8">
-  <title>ZY.Logic Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZY.Logic Lab - Plant Simulation资源中心</title>
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="assets/main.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>ZY.Logic Lab</h1>
-    <p>记录思路 · 记录成长 · 优化一切</p>
-  </header>
-  <main>
-    <p><a href="projectManager.html">🛠️ 管理我的仿真项目分类</a></p>
-    <h2>📌 最近更新</h2>
-    <ul>
-      <li><a href="worklog/2025-07-01.html">🗓️ 2025-07-01 | 仓库调度仿真优化</a></li>
-      <li><a href="worklog/2025-06-23.html">🗓️ 2025-06-23 | 库存控制逻辑优化测试</a></li>
-      <li><a href="knowledge/库存控制优化逻辑.html">📘 技术文档 | 库存控制优化逻辑</a></li>
-    </ul>
-    <h2>📁 下载区</h2>
-    <ul>
-      <li><a href="files/示例脚本说明.txt">📄 示例脚本说明.txt</a></li>
-    </ul>
-  </main>
-  <footer>
-    <p>© 2025 志杨 · ZY.Logic Lab</p>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">ZY.<span>Logic Lab</span></a>
+    <div class="navbar-links">
+      <a href="index.html" class="active">首页</a>
+      <a href="projects.html">项目库</a>
+      <a href="tutorials.html">教程</a>
+      <a href="knowledge.html">知识库</a>
+      <a href="worklog.html">工作日志</a>
+    </div>
+  </nav>
+
+  <!-- 英雄区 -->
+  <div class="hero">
+    <h1>Plant Simulation 资源中心</h1>
+    <p>收集整理我的Plant Simulation项目、学习视频和精品案例，方便快速查找和复习</p>
+    
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索项目、教程或知识...">
+    </div>
+  </div>
+  
+  <div class="container">
+    <!-- 最近项目 -->
+    <section class="section">
+      <div class="section-header">
+        <h2>📌 最近项目</h2>
+        <a href="projects.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-grid" id="recentProjects">
+        <!-- 项目卡片将通过JS动态生成 -->
+      </div>
+    </section>
+    
+    <!-- 教程与视频 -->
+    <section class="section">
+      <div class="section-header">
+        <h2>📺 教程与视频</h2>
+        <a href="tutorials.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-grid" id="tutorials">
+        <!-- 教程卡片将通过JS动态生成 -->
+      </div>
+    </section>
+    
+    <!-- 知识库 -->
+    <section class="section">
+      <div class="section-header">
+        <h2>📚 知识库</h2>
+        <a href="knowledge.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-grid" id="knowledgeItems">
+        <!-- 知识库卡片将通过JS动态生成 -->
+      </div>
+    </section>
+    
+    <!-- 工作日志 -->
+    <section class="section">
+      <div class="section-header">
+        <h2>📝 最近工作日志</h2>
+        <a href="worklog.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-grid" id="recentWorklog">
+        <!-- 工作日志卡片将通过JS动态生成 -->
+      </div>
+    </section>
+  </div>
+  
+  <!-- 管理入口 -->
+  <div class="admin-bar">
+    <a href="projectManager.html" class="btn btn-secondary"><i class="fas fa-cog"></i> 管理项目</a>
+  </div>
+  
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2023 ZY.Logic Lab - Plant Simulation资源中心</p>
+    </div>
   </footer>
+
+  <script>
+    // 示例数据 - 实际项目中可以从服务器获取
+    const projects = [
+      {
+        title: "机器人控制系统",
+        description: "基于Plant Simulation的机器人路径规划与控制系统",
+        tags: ["机器人", "路径规划", "控制系统"],
+        icon: "🤖",
+        url: "simulations/机器人控制/intro.html",
+        date: "2023-10-15"
+      },
+      {
+        title: "智能仓储系统",
+        description: "自动化立体仓库的仿真与优化",
+        tags: ["仓储", "自动化", "优化"],
+        icon: "🏭",
+        url: "#",
+        date: "2023-09-20"
+      },
+      {
+        title: "生产线平衡优化",
+        description: "多产品混线生产的平衡与调度优化",
+        tags: ["生产线", "平衡", "调度"],
+        icon: "⚙️",
+        url: "#",
+        date: "2023-08-05"
+      }
+    ];
+    
+    const tutorials = [
+      {
+        title: "Plant Simulation基础入门",
+        description: "从零开始学习Plant Simulation的基本操作与概念",
+        tags: ["入门", "基础"],
+        icon: "📚",
+        url: "#",
+        difficulty: "初级",
+        duration: "2小时"
+      },
+      {
+        title: "高级建模技巧",
+        description: "复杂系统建模与高级功能应用",
+        tags: ["高级", "建模"],
+        icon: "🔧",
+        url: "#",
+        difficulty: "中级",
+        duration: "3小时"
+      },
+      {
+        title: "SimTalk编程教程",
+        description: "SimTalk脚本语言的编程方法与实践",
+        tags: ["编程", "SimTalk"],
+        icon: "💻",
+        url: "#",
+        difficulty: "高级",
+        duration: "4小时"
+      }
+    ];
+    
+    const knowledge = [
+      {
+        title: "库存控制优化逻辑",
+        description: "基于预测模型的智能库存控制方法",
+        tags: ["库存", "优化", "预测"],
+        icon: "📊",
+        url: "knowledge/库存控制优化逻辑.html",
+        date: "2023-11-10"
+      },
+      {
+        title: "调度算法比较",
+        description: "常见调度算法的性能与适用场景比较",
+        tags: ["调度", "算法", "比较"],
+        icon: "🔄",
+        url: "#",
+        date: "2023-10-25"
+      },
+      {
+        title: "仿真验证方法论",
+        description: "仿真模型的验证与确认方法",
+        tags: ["验证", "方法论"],
+        icon: "✅",
+        url: "#",
+        date: "2023-09-15"
+      }
+    ];
+    
+    const worklog = [
+      {
+        title: "AGV路径优化测试",
+        description: "测试新的AGV路径优化算法，解决拥堵问题",
+        tags: ["AGV", "路径优化", "测试"],
+        icon: "🚛",
+        url: "worklog/2025-06-23.html",
+        date: "2025-06-23"
+      },
+      {
+        title: "产能分析模型开发",
+        description: "开发新的产能分析模型，支持多产品混线生产",
+        tags: ["产能分析", "开发"],
+        icon: "📈",
+        url: "#",
+        date: "2025-06-15"
+      }
+    ];
+    
+    // 渲染卡片函数
+    function renderCards(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      if (items.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results';
+        noResults.innerHTML = '<i class="fas fa-search"></i><p>没有找到匹配的结果</p>';
+        container.appendChild(noResults);
+        return;
+      }
+      
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        let cardHTML = '';
+        
+        // 卡片图片/图标
+        if (item.image) {
+          cardHTML += `<div class="card-img" style="background-image: url('${item.image}')"></div>`;
+        } else {
+          cardHTML += `<div class="card-img card-icon">${item.icon}</div>`;
+        }
+        
+        // 卡片内容
+        cardHTML += `
+          <div class="card-content">
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+            <div class="card-tags">
+              ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div class="card-meta">
+        `;
+        
+        // 添加特定元数据
+        if (item.date) {
+          cardHTML += `<span class="meta-item"><i class="far fa-calendar-alt"></i> ${item.date}</span>`;
+        }
+        if (item.difficulty) {
+          cardHTML += `<span class="meta-item"><i class="fas fa-signal"></i> ${item.difficulty}</span>`;
+        }
+        if (item.duration) {
+          cardHTML += `<span class="meta-item"><i class="far fa-clock"></i> ${item.duration}</span>`;
+        }
+        
+        cardHTML += `
+            </div>
+            <div class="card-footer">
+              <a href="${item.url || item.path}" class="btn">查看详情 <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        `;
+        
+        card.innerHTML = cardHTML;
+        container.appendChild(card);
+      });
+    }
+    
+    // 页面加载完成后渲染卡片
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCards('recentProjects', projects);
+      renderCards('tutorials', tutorials);
+      renderCards('knowledgeItems', knowledge);
+      renderCards('recentWorklog', worklog);
+      
+      // 设置导航栏活动状态
+      const currentPage = window.location.pathname.split('/').pop();
+      document.querySelectorAll('.navbar-links a').forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        }
+      });
+      
+      // 搜索功能
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const query = this.value.toLowerCase();
+          
+          // 如果在首页，搜索所有内容
+          if (currentPage === 'index.html' || currentPage === '') {
+            const filteredProjects = projects.filter(item => 
+              item.title.toLowerCase().includes(query) || 
+              item.description.toLowerCase().includes(query) || 
+              item.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            renderCards('recentProjects', filteredProjects);
+            
+            const filteredTutorials = tutorials.filter(item => 
+              item.title.toLowerCase().includes(query) || 
+              item.description.toLowerCase().includes(query) || 
+              item.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            renderCards('tutorials', filteredTutorials);
+            
+            const filteredKnowledge = knowledge.filter(item => 
+              item.title.toLowerCase().includes(query) || 
+              item.description.toLowerCase().includes(query) || 
+              item.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            renderCards('knowledgeItems', filteredKnowledge);
+            
+            const filteredWorklog = worklog.filter(item => 
+              item.title.toLowerCase().includes(query) || 
+              item.description.toLowerCase().includes(query) || 
+              item.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            renderCards('recentWorklog', filteredWorklog);
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

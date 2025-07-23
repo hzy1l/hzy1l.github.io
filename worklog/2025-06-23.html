@@ -2,14 +2,85 @@
 <html lang="zh-cn">
 <head>
   <meta charset="UTF-8">
-  <title>2025-06-23 工作日志</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-06-23 工作日志 - ZY.Logic Lab</title>
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h1>2025-06-23｜库存控制逻辑优化测试</h1>
-  <p>标签：SimTalk / 库存管理 / Plant Simulation</p>
-  <p>📌 今天测试了仓储模型中的出库优先级逻辑，计划使用 <code>sort()</code> 对分拣点进行动态优先排序。观察队列响应情况并记录瓶颈位置。</p>
-  <p>遇到的问题：参数波动时资源等待时间不稳定，考虑引入信号控制机制做调度补偿。</p>
-  <a href="../index.html">← 返回首页</a>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-brand">ZY.<span>Logic Lab</span></a>
+    <div class="navbar-links">
+      <a href="../index.html">首页</a>
+      <a href="../projects.html">项目库</a>
+      <a href="../tutorials.html">教程</a>
+      <a href="../knowledge.html">知识库</a>
+      <a href="../worklog.html" class="active">工作日志</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section">
+      <div class="log-item">
+        <div class="log-header">
+          <div class="log-date">2025-06-23</div>
+          <div class="card-tags">
+            <span class="tag">SimTalk</span>
+            <span class="tag">库存管理</span>
+            <span class="tag">Plant Simulation</span>
+          </div>
+        </div>
+        
+        <h2 class="log-title">库存控制逻辑优化测试</h2>
+        
+        <div class="log-content">
+          <p><i class="fas fa-thumbtack"></i> 今天测试了仓储模型中的出库优先级逻辑，计划使用 <code>sort()</code> 对分拣点进行动态优先排序。观察队列响应情况并记录瓶颈位置。</p>
+          
+          <h3>遇到的问题</h3>
+          <p>参数波动时资源等待时间不稳定，考虑引入信号控制机制做调度补偿。</p>
+          
+          <h3>解决方案</h3>
+          <p>设计了一个基于信号的调度补偿机制，当检测到资源等待时间超过阈值时，自动调整分拣优先级，确保系统稳定运行。</p>
+          
+          <h3>后续计划</h3>
+          <p>明天将继续优化该机制，并进行更多场景下的测试，确保在不同负载条件下都能保持稳定性能。</p>
+          
+          <p>相关知识点：<a href="../knowledge/库存控制优化逻辑.html">库存控制优化逻辑</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>ZY.Logic Lab</h3>
+        <p>Plant Simulation项目、学习资源与知识分享平台</p>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul>
+          <li><a href="../index.html">首页</a></li>
+          <li><a href="../projects.html">项目库</a></li>
+          <li><a href="../tutorials.html">教程</a></li>
+          <li><a href="../knowledge.html">知识库</a></li>
+          <li><a href="../worklog.html">工作日志</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>相关资源</h3>
+        <ul>
+          <li><a href="#">Plant Simulation官网</a></li>
+          <li><a href="#">SimTalk参考手册</a></li>
+          <li><a href="#">模拟优化技术论坛</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 ZY.Logic Lab. 保留所有权利。</p>
+    </div>
+  </footer>
 </body>
 </html>

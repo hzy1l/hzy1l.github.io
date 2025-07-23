@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>知识库 - ZY.Logic Lab</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .knowledge-card {
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .knowledge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    .knowledge-img {
+      height: 160px;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    
+    .knowledge-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .knowledge-card h2 {
+      margin: 0 0 1rem;
+      font-size: 1.4rem;
+    }
+    
+    .knowledge-card p {
+      margin: 0 0 1.5rem;
+      color: #bbb;
+      flex-grow: 1;
+    }
+    
+    .knowledge-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .knowledge-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #444;
+    }
+    
+    .knowledge-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: auto;
+    }
+    
+    .btn {
+      background: #4ea1ff;
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    
+    .btn:hover {
+      background: #60b2ff;
+      text-decoration: none;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #ccc;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .nav-bar {
+      display: flex;
+      background: #2a2a2a;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .nav-bar a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .nav-bar a:hover, .nav-bar a.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .nav-bar a.active {
+      font-weight: bold;
+    }
+    
+    .search-bar {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-bar input {
+      background: #333;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #eee;
+      width: 200px;
+    }
+    
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+      background: #333;
+      border: none;
+      color: #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .filter-btn.active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>知识库</h1>
+  
+  <div class="nav-bar">
+    <a href="index.html">首页</a>
+    <a href="projects.html">项目库</a>
+    <a href="tutorials.html">教程</a>
+    <a href="knowledge.html" class="active">知识库</a>
+    <a href="worklog.html">工作日志</a>
+    <div class="search-bar">
+      <input type="text" placeholder="搜索知识..." id="searchInput">
+    </div>
+  </div>
+  
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="algorithm">算法</button>
+    <button class="filter-btn" data-filter="modeling">建模技巧</button>
+    <button class="filter-btn" data-filter="optimization">优化方法</button>
+    <button class="filter-btn" data-filter="simtalk">SimTalk</button>
+  </div>
+  
+  <div class="knowledge-grid" id="knowledgeGrid">
+    <!-- 知识卡片将通过JS动态生成 -->
+  </div>
+  
+  <script>
+    // 示例知识数据
+    const knowledgeItems = [
+      {
+        icon: "📦",
+        title: "库存控制优化逻辑",
+        description: "适用于高频分拣任务的智能出库模型，基于优先级和距离的调度算法",
+        tags: ["库存管理", "优化", "算法"],
+        category: "algorithm",
+        date: "2025-06-23",
+        path: "knowledge/库存控制优化逻辑.html"
+      },
+      {
+        icon: "🔄",
+        title: "SimTalk循环优化技巧",
+        description: "提高SimTalk脚本执行效率的循环优化方法，减少模型运行时间",
+        tags: ["SimTalk", "优化", "编程"],
+        category: "simtalk",
+        date: "2025-05-15",
+        path: "#"
+      },
+      {
+        icon: "📊",
+        title: "数据分析方法论",
+        description: "使用Plant Simulation进行数据收集和分析的系统方法，包括实验设计和结果解读",
+        tags: ["数据分析", "方法论", "统计"],
+        category: "modeling",
+        date: "2025-04-20",
+        path: "#"
+      },
+      {
+        icon: "⚙️",
+        title: "模型性能优化指南",
+        description: "大型仿真模型的性能优化技巧，从模型结构到代码实现的全面优化",
+        tags: ["性能优化", "建模", "技巧"],
+        category: "optimization",
+        date: "2025-03-10",
+        path: "#"
+      },
+      {
+        icon: "🤖",
+        title: "机器人轴同步控制",
+        description: "实现多轴机器人协调运动的SimTalk控制方法，提高运动精度和效率",
+        tags: ["机器人", "控制", "SimTalk"],
+        category: "simtalk",
+        date: "2025-06-15",
+        path: "#"
+      },
+      {
+        icon: "🚚",
+        title: "AGV路径规划算法",
+        description: "基于A*算法的AGV路径规划实现，解决多AGV调度冲突问题",
+        tags: ["AGV", "路径规划", "算法"],
+        category: "algorithm",
+        date: "2025-04-22",
+        path: "#"
+      }
+    ];
+    
+    // 渲染知识卡片
+    function renderKnowledgeItems(filteredItems) {
+      const container = document.getElementById("knowledgeGrid");
+      container.innerHTML = "";
+      
+      filteredItems.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "knowledge-card";
+        
+        // 标签HTML
+        let tagsHtml = '';
+        if (item.tags && item.tags.length) {
+          tagsHtml = '<div class="knowledge-tags">' + 
+            item.tags.map(tag => `<span class="tag">${tag}</span>`).join('') +
+            '</div>';
+        }
+        
+        card.innerHTML = `
+          <div class="knowledge-img">${item.icon || "📚"}</div>
+          <div class="knowledge-content">
+            <h2>${item.title}</h2>
+            <div class="knowledge-meta">
+              <span>📅 ${item.date || "无日期"}</span>
+              <span>🏷️ ${item.category || "未分类"}</span>
+            </div>
+            <p>${item.description || "暂无简介"}</p>
+            ${tagsHtml}
+            <div class="knowledge-actions">
+              <a href="${item.path}" class="btn">查看详情</a>
+              <a href="#" class="btn btn-secondary">相关资源</a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    // 初始渲染
+    renderKnowledgeItems(knowledgeItems);
+    
+    // 过滤功能
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 更新按钮状态
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.getAttribute('data-filter');
+        let filteredItems = knowledgeItems;
+        
+        if (filter !== 'all') {
+          filteredItems = knowledgeItems.filter(item => item.category === filter);
+        }
+        
+        renderKnowledgeItems(filteredItems);
+      });
+    });
+    
+    // 搜索功能
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        
+        const filteredItems = knowledgeItems.filter(item => {
+          return item.title.toLowerCase().includes(query) || 
+                 item.description.toLowerCase().includes(query) || 
+                 item.tags.some(tag => tag.toLowerCase().includes(query));
+        });
+        
+        renderKnowledgeItems(filteredItems);
+      });
+    }
+  </script>
+</body>
+</html>

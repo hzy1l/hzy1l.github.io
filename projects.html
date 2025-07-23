@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>项目库 - ZY.Logic Lab</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .project-card {
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    .project-img {
+      height: 180px;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    
+    .project-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .project-card h2 {
+      margin: 0 0 1rem;
+      font-size: 1.4rem;
+    }
+    
+    .project-card p {
+      margin: 0 0 1.5rem;
+      color: #bbb;
+      flex-grow: 1;
+    }
+    
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #444;
+    }
+    
+    .project-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn {
+      background: #4ea1ff;
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    
+    .btn:hover {
+      background: #60b2ff;
+      text-decoration: none;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #ccc;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .nav-bar {
+      display: flex;
+      background: #2a2a2a;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .nav-bar a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .nav-bar a:hover, .nav-bar a.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .nav-bar a.active {
+      font-weight: bold;
+    }
+    
+    .search-bar {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-bar input {
+      background: #333;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #eee;
+      width: 200px;
+    }
+    
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+      background: #333;
+      border: none;
+      color: #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .filter-btn.active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>项目库</h1>
+  
+  <div class="nav-bar">
+    <a href="index.html">首页</a>
+    <a href="projects.html" class="active">项目库</a>
+    <a href="tutorials.html">教程</a>
+    <a href="knowledge.html">知识库</a>
+    <a href="worklog.html">工作日志</a>
+    <div class="search-bar">
+      <input type="text" placeholder="搜索项目..." id="searchInput">
+    </div>
+  </div>
+  
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="robot">机器人</button>
+    <button class="filter-btn" data-filter="logistics">物流仓储</button>
+    <button class="filter-btn" data-filter="production">生产线</button>
+    <button class="filter-btn" data-filter="optimization">优化算法</button>
+  </div>
+  
+  <div class="project-grid" id="projectGrid">
+    <!-- 项目卡片将通过JS动态生成 -->
+  </div>
+  
+  <script>
+    // 示例项目数据
+    const projects = [
+      {
+        icon: "🤖",
+        title: "机器人控制",
+        description: "自定义机器人的构建方式，重点介绍建模思路和脚本逻辑，包括轴同步控制和取放料优化",
+        tags: ["SimTalk", "机器人", "控制算法"],
+        date: "2025-06-15",
+        category: "robot",
+        path: "simulations/机器人控制/intro.html"
+      },
+      {
+        icon: "🏭",
+        title: "库存控制优化",
+        description: "高频分拣任务的智能出库模型，基于优先级和距离的调度算法，提高吞吐效率",
+        tags: ["库存管理", "优化", "算法"],
+        date: "2025-06-23",
+        category: "logistics",
+        path: "knowledge/库存控制优化逻辑.html"
+      },
+      {
+        icon: "📊",
+        title: "产线平衡优化",
+        description: "使用仿真模型验证产线平衡方案，包括工位设计和人员配置优化",
+        tags: ["产线平衡", "优化", "人员配置"],
+        date: "2025-05-10",
+        category: "production",
+        path: "#"
+      },
+      {
+        icon: "🚚",
+        title: "AGV路径规划",
+        description: "基于A*算法的AGV路径规划模型，解决多AGV调度冲突问题",
+        tags: ["AGV", "路径规划", "算法"],
+        date: "2025-04-22",
+        category: "logistics",
+        path: "#"
+      }
+    ];
+    
+    // 渲染项目卡片
+    function renderProjects(filteredProjects) {
+      const container = document.getElementById("projectGrid");
+      container.innerHTML = "";
+      
+      filteredProjects.forEach(project => {
+        const card = document.createElement("div");
+        card.className = "project-card";
+        
+        // 标签HTML
+        let tagsHtml = '';
+        if (project.tags && project.tags.length) {
+          tagsHtml = '<div class="project-tags">' + 
+            project.tags.map(tag => `<span class="tag">${tag}</span>`).join('') +
+            '</div>';
+        }
+        
+        card.innerHTML = `
+          <div class="project-img">${project.icon || "📦"}</div>
+          <div class="project-content">
+            <h2>${project.title}</h2>
+            <div class="project-meta">
+              <span>📅 ${project.date || "无日期"}</span>
+              <span>🏷️ ${project.category || "未分类"}</span>
+            </div>
+            <p>${project.description || "暂无简介"}</p>
+            ${tagsHtml}
+            <div class="project-actions">
+              <a href="${project.path}" class="btn">查看详情</a>
+              <a href="${project.path.replace('intro.html', 'files/')}" class="btn btn-secondary">下载文件</a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    // 初始渲染
+    renderProjects(projects);
+    
+    // 过滤功能
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 更新按钮状态
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.getAttribute('data-filter');
+        let filteredProjects = projects;
+        
+        if (filter !== 'all') {
+          filteredProjects = projects.filter(project => project.category === filter);
+        }
+        
+        renderProjects(filteredProjects);
+      });
+    });
+    
+    // 搜索功能
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        
+        const filteredProjects = projects.filter(project => {
+          return project.title.toLowerCase().includes(query) || 
+                 project.description.toLowerCase().includes(query) || 
+                 project.tags.some(tag => tag.toLowerCase().includes(query));
+        });
+        
+        renderProjects(filteredProjects);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>工作日志 - ZY.Logic Lab</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .worklog-container {
+      margin-top: 2rem;
+    }
+    
+    .worklog-item {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .worklog-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    .worklog-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #444;
+    }
+    
+    .worklog-date {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+    
+    .worklog-title {
+      font-size: 1.4rem;
+      margin: 0;
+      flex-grow: 1;
+    }
+    
+    .worklog-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .worklog-content {
+      color: #bbb;
+      line-height: 1.6;
+    }
+    
+    .worklog-content p {
+      margin-bottom: 1rem;
+    }
+    
+    .worklog-content code {
+      background: #333;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #ff9800;
+    }
+    
+    .worklog-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #444;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    .worklog-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn {
+      background: #4ea1ff;
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    
+    .btn:hover {
+      background: #60b2ff;
+      text-decoration: none;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #666;
+      color: #ccc;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .nav-bar {
+      display: flex;
+      background: #2a2a2a;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .nav-bar a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .nav-bar a:hover, .nav-bar a.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .nav-bar a.active {
+      font-weight: bold;
+    }
+    
+    .search-bar {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-bar input {
+      background: #333;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #eee;
+      width: 200px;
+    }
+    
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+      background: #333;
+      border: none;
+      color: #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(78, 161, 255, 0.2);
+      color: #4ea1ff;
+    }
+    
+    .filter-btn.active {
+      font-weight: bold;
+    }
+    
+    .add-worklog {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
+    }
+    
+    .add-worklog .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>工作日志</h1>
+  
+  <div class="nav-bar">
+    <a href="index.html">首页</a>
+    <a href="projects.html">项目库</a>
+    <a href="tutorials.html">教程</a>
+    <a href="knowledge.html">知识库</a>
+    <a href="worklog.html" class="active">工作日志</a>
+    <div class="search-bar">
+      <input type="text" placeholder="搜索日志..." id="searchInput">
+    </div>
+  </div>
+  
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="SimTalk">SimTalk</button>
+    <button class="filter-btn" data-filter="库存管理">库存管理</button>
+    <button class="filter-btn" data-filter="机器人">机器人</button>
+    <button class="filter-btn" data-filter="优化">优化</button>
+  </div>
+  
+  <div class="add-worklog">
+    <a href="#" class="btn">➕ 添加新日志</a>
+  </div>
+  
+  <div class="worklog-container" id="worklogContainer">
+    <!-- 工作日志将通过JS动态生成 -->
+  </div>
+  
+  <script>
+    // 示例工作日志数据
+    const worklogs = [
+      {
+        date: "2025-07-01",
+        title: "机器人轨迹优化测试",
+        tags: ["SimTalk", "机器人", "优化"],
+        content: `<p>今天对机器人轨迹生成算法进行了优化，主要改进了以下几点：</p>
+<p>1. 使用贝塞尔曲线替代原来的线性插值，使运动更加平滑</p>
+<p>2. 添加了加速度限制，避免急停急起导致的抖动</p>
+<p>3. 优化了转弯处理逻辑，减少了轨迹规划时间</p>
+<p>测试结果：轨迹平滑度提高了约30%，规划时间减少了15%。</p>`,
+        path: "worklog/2025-07-01.html"
+      },
+      {
+        date: "2025-06-23",
+        title: "库存控制逻辑优化测试",
+        tags: ["SimTalk", "库存管理", "Plant Simulation"],
+        content: `<p>今天测试了仓储模型中的出库优先级逻辑，计划使用 <code>sort()</code> 对分拣点进行动态优先排序。观察队列响应情况并记录瓶颈位置。</p>
+<p>遇到的问题：参数波动时资源等待时间不稳定，考虑引入信号控制机制做调度补偿。</p>`,
+        path: "worklog/2025-06-23.html"
+      },
+      {
+        date: "2025-06-15",
+        title: "机器人控制模型初步搭建",
+        tags: ["机器人", "建模", "SimTalk"],
+        content: `<p>完成了机器人控制模型的基础框架搭建，包括：</p>
+<p>1. 基本运动学模型的实现</p>
+<p>2. 轴控制接口的定义</p>
+<p>3. 简单的路径规划算法</p>
+<p>下一步计划：实现更复杂的轨迹规划和碰撞检测。</p>`,
+        path: "#"
+      },
+      {
+        date: "2025-05-20",
+        title: "AGV路径规划算法研究",
+        tags: ["AGV", "路径规划", "算法"],
+        content: `<p>研究了几种常见的路径规划算法：</p>
+<p>1. Dijkstra算法：适合静态环境，但计算量大</p>
+<p>2. A*算法：加入启发式搜索，效率更高</p>
+<p>3. RRT算法：适合高维空间，但收敛性较差</p>
+<p>决定在项目中采用改进的A*算法，并加入动态避障功能。</p>`,
+        path: "#"
+      }
+    ];
+    
+    // 渲染工作日志
+    function renderWorklogs(filteredLogs) {
+      const container = document.getElementById("worklogContainer");
+      container.innerHTML = "";
+      
+      filteredLogs.forEach(log => {
+        const item = document.createElement("div");
+        item.className = "worklog-item";
+        
+        // 标签HTML
+        let tagsHtml = '';
+        if (log.tags && log.tags.length) {
+          tagsHtml = '<div class="worklog-tags">' + 
+            log.tags.map(tag => `<span class="tag">${tag}</span>`).join('') +
+            '</div>';
+        }
+        
+        item.innerHTML = `
+          <div class="worklog-header">
+            <span class="worklog-date">${log.date}</span>
+            <h2 class="worklog-title">${log.title}</h2>
+          </div>
+          ${tagsHtml}
+          <div class="worklog-content">
+            ${log.content}
+          </div>
+          <div class="worklog-footer">
+            <span>📝 最后更新: ${log.date}</span>
+            <div class="worklog-actions">
+              <a href="${log.path}" class="btn">查看详情</a>
+              <a href="#" class="btn btn-secondary">相关资源</a>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+    
+    // 初始渲染
+    renderWorklogs(worklogs);
+    
+    // 过滤功能
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 更新按钮状态
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.getAttribute('data-filter');
+        let filteredLogs = worklogs;
+        
+        if (filter !== 'all') {
+          filteredLogs = worklogs.filter(log => 
+            log.tags && log.tags.includes(filter)
+          );
+        }
+        
+        renderWorklogs(filteredLogs);
+      });
+    });
+    
+    // 搜索功能
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", function() {
+        const query = this.value.toLowerCase();
+        
+        const filteredLogs = worklogs.filter(log => {
+          return log.title.toLowerCase().includes(query) || 
+                 log.content.toLowerCase().includes(query) || 
+                 (log.tags && log.tags.some(tag => tag.toLowerCase().includes(query)));
+        });
+        
+        renderWorklogs(filteredLogs);
+      });
+    }
+  </script>
+</body>
+</html>
